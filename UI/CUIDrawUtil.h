@@ -1,9 +1,12 @@
 #ifndef _CUIDrawUtil_h_
 #define _CUIDrawUtil_h_
 
+#include "ShaderProgram.h"
+
 #include <GG/Clr.h>
 #include <GG/PtRect.h>
 #include <GG/GLClientAndServerBuffer.h>
+#include <GG/Texture.h>
 
 #include <memory>
 
@@ -136,6 +139,23 @@ private:
 
     std::unique_ptr<Impl> const m_impl;
 };
+
+class LayerMaskRenderer {
+public:
+    LayerMaskRenderer();
+    ~LayerMaskRenderer();
+
+    void RenderTextureWithLayerMask(const GG::Pt& ul, const GG::Pt& lr, const std::shared_ptr<GG::Texture>& texture, const std::shared_ptr<GG::Texture>& layer_mask);
+
+    void StartUsing(const std::shared_ptr<GG::Texture>& texture, const std::shared_ptr<GG::Texture>& layer_mask);
+
+    void StopUsing();
+
+private:
+    std::unique_ptr<ShaderProgram> m_layermask_shader;
+};
+
+    
 
 #endif // _CUIDrawUtil_h_
 

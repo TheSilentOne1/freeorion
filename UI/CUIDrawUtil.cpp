@@ -6,6 +6,7 @@
 #include "../util/OptionsDB.h"
 
 #include <GG/DrawUtil.h>
+#include <GG/Texture.h>
 
 #include <cmath>
 
@@ -493,3 +494,44 @@ void ScanlineRenderer::SetColor(GG::Clr clr)
 
 void ScanlineRenderer::StopUsing()
 { m_impl->StopUsing(); }
+
+
+
+LayerMaskRenderer::LayerMaskRenderer() :
+    m_layermask_shader()
+{};
+
+LayerMaskRenderer::~LayerMaskRenderer() {};
+
+void LayerMaskRenderer::RenderTextureWithLayerMask(const GG::Pt& ul, const GG::Pt& lr, const std::shared_ptr<GG::Texture>& texture, const std::shared_ptr<GG::Texture>& layer_mask) {
+    StartUsing(texture, layer_mask);
+    texture->OrthoBlit(ul, lr);
+    StopUsing();
+}
+
+void LayerMaskRenderer::StartUsing(const std::shared_ptr<GG::Texture>& texture, const std::shared_ptr<GG::Texture>& layer_mask) {
+    if (!m_layermask_shader) {
+        boost::filesystem::path shader_path = GetRootDataDir() / "default" / "shaders" / "layermask.frag";
+        std::string shader_text;
+        if (!ReadFile(shader_path, shader_text)) {
+            ErrorLogger() << "LayermaskRenderer failed to read shader at path " << shader_path.string();
+            return;
+        }
+        m_layermask_shader = ShaderProgram::shaderProgramFactory("", shader_text);
+
+        if (!m_layermask_shader) {
+            ErrorLogger() << "LayermaskRenderer failed to initialize shader.";
+            return;
+        }
+        DebugLogger() << "Loaded Shader: " << shader_text;
+    }
+
+    m_layermask_shader->Use();
+
+    m_layermask_shader->Bind("texCoords", *texture->DefaultTexCoords());
+    m_layermask_shader->Bind("maskTex", layer_mask->OpenGLId());
+    m_layermask_shader->Bind("colorTex", texture->OpenGLId());
+}
+
+void LayerMaskRenderer::StopUsing()
+{ m_layermask_shader->stopUse(); }

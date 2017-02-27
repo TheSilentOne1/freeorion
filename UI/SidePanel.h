@@ -3,6 +3,7 @@
 
 #include "CUIControls.h"
 #include "CUIWnd.h"
+#include "StarAnimationControl.h"
 
 #include "../universe/ResourceCenter.h"
 #include "../universe/Planet.h"
@@ -145,7 +146,7 @@ private:
     GG::TextControl*            m_star_type_text;
     GG::Button*                 m_button_prev;
     GG::Button*                 m_button_next;
-    GG::DynamicGraphic*         m_star_graphic;
+    StarAnimationControl*       m_star_animation;
 
     std::vector<GG::SubTexture> m_fleet_icons;
 

@@ -13,6 +13,7 @@
 #include "MapWnd.h"
 #include "ShaderProgram.h"
 #include "SpecialsPanel.h"
+#include "StarAnimationControl.h"
 #include "SystemResourceSummaryBrowseWnd.h"
 #include "TextBrowseWnd.h"
 #include "../universe/Predicates.h"
@@ -828,6 +829,7 @@ class SidePanel::SystemNameDropDownList : public CUIDropDownList {
 };
 
 namespace {
+
     const std::vector<std::shared_ptr<GG::Texture>>& GetAsteroidTextures() {
         static std::vector<std::shared_ptr<GG::Texture>> retval;
         if (retval.empty()) {
@@ -2763,7 +2765,7 @@ SidePanel::SidePanel(const std::string& config_name) :
     m_star_type_text(nullptr),
     m_button_prev(nullptr),
     m_button_next(nullptr),
-    m_star_graphic(nullptr),
+    m_star_animation(nullptr),
     m_planet_panel_container(nullptr),
     m_system_resource_summary(nullptr),
     m_selection_enabled(false)
@@ -2835,7 +2837,7 @@ SidePanel::~SidePanel() {
     }
     s_side_panels.erase(this);
 
-    delete m_star_graphic;
+    delete m_star_animation;
     delete m_system_resource_summary;
 }
 
@@ -3077,8 +3079,8 @@ void SidePanel::RefreshImpl() {
     // clear out current contents
     m_planet_panel_container->Clear();
     m_star_type_text->SetText("");
-    delete m_star_graphic;
-    m_star_graphic = nullptr;
+    delete m_star_animation;
+    m_star_animation = nullptr;
     delete m_system_resource_summary;
     m_system_resource_summary = nullptr;
 
@@ -3091,22 +3093,14 @@ void SidePanel::RefreshImpl() {
         return;
 
     // (re)create top right star graphic
-    std::shared_ptr<GG::Texture> graphic =
-        ClientUI::GetClientUI()->GetModuloTexture(ClientUI::ArtDir() / "stars_sidepanel",
-                                                  ClientUI::StarTypeFilePrefixes()[system->GetStarType()],
-                                                  s_system_id);
-    std::vector<std::shared_ptr<GG::Texture>> textures;
-    textures.push_back(graphic);
 
-    int graphic_width = Value(Width()) - MaxPlanetDiameter();
-    m_star_graphic = new GG::DynamicGraphic(GG::X(MaxPlanetDiameter()), GG::Y0,
-                                            GG::X(graphic_width), GG::Y(graphic_width), true,
-                                            textures[0]->DefaultWidth(), textures[0]->DefaultHeight(),
-                                            0, textures, GG::GRAPHIC_FITGRAPHIC | GG::GRAPHIC_PROPSCALE);
-
-    AttachChild(m_star_graphic);
-    MoveChildDown(m_star_graphic);
-
+    // TODO: need option to turn animated suns on/off
+    int graphic_width = MaxPlanetDiameter(); // Value(Width()) - 
+    m_star_animation = new StarAnimationControl(GG::X0, GG::Y0,
+                                                GG::X(graphic_width), GG::Y(graphic_width),
+                                                s_system_id, system->GetStarType());
+    AttachChild(m_star_animation);
+    MoveChildDown(m_star_animation);
 
     // star type
     m_star_type_text->SetText("<s>" + GetStarTypeName(system) + "</s>");
@@ -3210,7 +3204,7 @@ void SidePanel::DoLayout() {
     GG::GUI::PreRenderWindow(m_system_resource_summary);
     GG::GUI::PreRenderWindow(m_planet_panel_container);
 
-    // hide scrollbar if there is no planets in the system
+    // hide scrollbar if there are no planets in the system
     std::shared_ptr<const System> system = GetSystem(s_system_id);
     if (system) {
         if (system->PlanetIDs().empty())
@@ -3219,7 +3213,7 @@ void SidePanel::DoLayout() {
             m_planet_panel_container->ShowScrollbar();
     }
 
-    // resize system resource summary
+    // resize system resource summary                ------HERE-------
     if (m_system_resource_summary) {
         ul = GG::Pt(GG::X(EDGE_PAD + 1), PLANET_PANEL_TOP - m_system_resource_summary->Height());
         lr = ul + GG::Pt(ClientWidth() - EDGE_PAD - 1, m_system_resource_summary->Height());
