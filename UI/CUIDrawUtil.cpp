@@ -523,14 +523,12 @@ void LayerMaskRenderer::StartUsing(const std::shared_ptr<GG::Texture>& texture, 
             ErrorLogger() << "LayermaskRenderer failed to initialize shader.";
             return;
         }
-        DebugLogger() << "Loaded Shader: " << shader_text;
     }
 
     m_layermask_shader->Use();
-
-    m_layermask_shader->Bind("texCoords", *texture->DefaultTexCoords());
     m_layermask_shader->Bind("maskTex", layer_mask->OpenGLId());
     m_layermask_shader->Bind("colorTex", texture->OpenGLId());
+    m_layermask_shader->Bind("texCoords", 0.0f, 1.0f);
 }
 
 void LayerMaskRenderer::StopUsing()

@@ -411,6 +411,7 @@ namespace {
         db.Add("UI.sidepanel-planet-min-diameter",   UserStringNop("OPTIONS_DB_UI_SIDEPANEL_PLANET_MIN_DIAMETER"),  24,     RangedValidator<int>(8,  128));
         db.Add("UI.sidepanel-planet-shown",          UserStringNop("OPTIONS_DB_UI_SIDEPANEL_PLANET_SHOWN"),         true,   Validator<bool>());
         db.Add("UI.sidepanel-planet-fog-of-war-clr", UserStringNop("OPTIONS_DB_UI_PLANET_FOG_CLR"),                 GG::Clr(0, 0, 0, 128),  Validator<GG::Clr>());
+        db.Add("UI.sidepanel.animated-star",         UserStringNop("OPTIONS_DB_UI_ANIMATED_STAR"),                  true,   Validator<bool>());
     }
     bool temp_bool = RegisterOptions(&AddOptions);
 
@@ -3093,8 +3094,6 @@ void SidePanel::RefreshImpl() {
         return;
 
     // (re)create top right star graphic
-
-    // TODO: need option to turn animated suns on/off
     int graphic_width = MaxPlanetDiameter(); // Value(Width()) - 
     m_star_animation = new StarAnimationControl(GG::X0, GG::Y0,
                                                 GG::X(graphic_width), GG::Y(graphic_width),
@@ -3213,10 +3212,10 @@ void SidePanel::DoLayout() {
             m_planet_panel_container->ShowScrollbar();
     }
 
-    // resize system resource summary                ------HERE-------
+    // resize system resource summary
     if (m_system_resource_summary) {
-        ul = GG::Pt(GG::X(EDGE_PAD + 1), PLANET_PANEL_TOP - m_system_resource_summary->Height());
-        lr = ul + GG::Pt(ClientWidth() - EDGE_PAD - 1, m_system_resource_summary->Height());
+        ul = GG::Pt(GG::X(MaxPlanetDiameter()), PLANET_PANEL_TOP - m_system_resource_summary->Height() - EDGE_PAD);
+        lr = ul + GG::Pt(ClientWidth() - MaxPlanetDiameter(), m_system_resource_summary->Height());
         m_system_resource_summary->SizeMove(ul, lr);
     }
 }

@@ -4,6 +4,7 @@
 #include "CUIDrawUtil.h"
 
 #include "../util/Logger.h"
+#include "../util/OptionsDB.h"
 
 #include <GG/GUI.h>
 #include <GG/Texture.h>
@@ -57,5 +58,10 @@ void StarAnimationControl::Render() {
     DebugLogger() << "Frame: " << frame;
 
     m_core_texture->OrthoBlit(ul, lr);
-    s_layermask_shader.RenderTextureWithLayerMask(ul, lr, m_corona_texture, m_layer_mask_textures[frame]);
+    if (GetOptionsDB().Get<bool>("UI.sidepanel.animated-star")) {
+        s_layermask_shader.RenderTextureWithLayerMask(ul, lr, m_corona_texture, m_layer_mask_textures[frame]);
+    }
+    else {
+        m_corona_texture->OrthoBlit(ul, lr);
+    }
 }
