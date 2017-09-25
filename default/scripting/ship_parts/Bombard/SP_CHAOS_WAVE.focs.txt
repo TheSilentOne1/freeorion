@@ -2,7 +2,7 @@ Part
     name = "SP_CHAOS_WAVE"
     description = "SP_CHAOS_WAVE_DESC"
     class = Bombard
-    capacity = 2.0
+    capacity = 4.0
     mountableSlotTypes = External
     buildcost = 10 * [[FLEET_UPKEEP_MULTIPLICATOR]] * [[SHIP_PART_COST_MULTIPLIER]]
     buildtime = 5
@@ -11,18 +11,11 @@ Part
     effectsgroups = [
         EffectsGroup    // players can order chaos wave used on enemies
             scope = And [
-                Planet
-                InSystem id = Source.SystemID
-                OrderedBombardedBy condition = Source
-                Or [
-                    OwnedBy affiliation = EnemyOf empire = Source.Owner
-                    Unowned
-                ]
-                VisibleToEmpire empire = Source.Owner
+                [[BOMBARD_SCOPE]]
             ]
             priority = [[EARLY_POPULATION_PRIORITY]]
             effects = [
-                SetPopulation value = Value - 2
+                SetTroops value = Value - 4
                 RemoveSpecial name = "GAIA_SPECIAL"
                 GenerateSitRepMessage
                     message = "EFFECT_BIOWEAPON"
@@ -30,7 +23,7 @@ Part
                     icon = "icons/sitrep/bio_weapon_2.png"
                     parameters = [
                         tag = "planet" data = Target.ID
-                        tag = "rawtext" data = "2"
+                        tag = "rawtext" data = "4"
                         tag = "shippart" data = "SP_CHAOS_WAVE"
                     ]
                     empire = Target.Owner
@@ -67,3 +60,4 @@ Part
 
 #include "/scripting/common/upkeep.macros"
 #include "/scripting/common/priorities.macros"
+#include "/scripting/ship_parts/bombard/bombard.macros"

@@ -1,0 +1,11 @@
+BOMBARD_SCOPE
+'''             Planet
+                Species
+                InSystem id = Source.SystemID
+                OrderedBombardedBy condition = Source
+                Or [
+                    OwnedBy affiliation = EnemyOf empire = Source.Owner
+                    Unowned
+                ]
+                VisibleToEmpire empire = Source.Owner
+'''
