@@ -5959,6 +5959,7 @@ namespace {
         case METER_STOCKPILE:           return "Stockpile";          break;
         case METER_STEALTH:             return "Stealth";            break;
         case METER_DETECTION:           return "Detection";          break;
+        case METER_BOMBS:               return "Bombs";              break;
         case METER_SPEED:               return "Speed";              break;
         case METER_CAPACITY:            return "Capacity";           break;
         default:                        return "?Meter?";            break;

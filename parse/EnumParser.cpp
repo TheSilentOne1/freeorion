@@ -139,6 +139,7 @@ namespace parse {
             |   tok.Stealth_                [ _val = METER_STEALTH ]
             |   tok.Detection_              [ _val = METER_DETECTION ]
             |   tok.Speed_                  [ _val = METER_SPEED ]
+            |   tok.Bombs_                 [ _val = METER_BOMBS ]
 
             |   tok.Size_                   [ _val = METER_SIZE ]
             ;
@@ -192,6 +193,7 @@ namespace parse {
             |   tok.SetRebelTroops_         [ _val = METER_REBEL_TROOPS ]
             |   tok.SetStealth_             [ _val = METER_STEALTH ]
             |   tok.SetDetection_           [ _val = METER_DETECTION ]
+            |   tok.SetBombs_               [ _val = METER_BOMBS ]
             |   tok.SetSpeed_               [ _val = METER_SPEED ]
 
             |   tok.SetSize_                [ _val = METER_SIZE ]

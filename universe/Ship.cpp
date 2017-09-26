@@ -48,6 +48,7 @@ Ship::Ship(int empire_id, int design_id, const std::string& species_name,
     AddMeter(METER_STRUCTURE);
     AddMeter(METER_MAX_STRUCTURE);
     AddMeter(METER_SPEED);
+    AddMeter(METER_BOMBS);
     AddMeter(METER_TARGET_INDUSTRY);
     AddMeter(METER_INDUSTRY);
     AddMeter(METER_TARGET_RESEARCH);
@@ -327,6 +328,10 @@ float Ship::TroopCapacity() const {
     }
 
     return retval;
+}
+
+float Ship::BombardCapacity() const {
+    return CurrentMeterValue(METER_BOMBS);
 }
 
 bool Ship::CanHaveTroops() const {
@@ -643,6 +648,7 @@ void Ship::ResetTargetMaxUnpairedMeters() {
 
     UniverseObject::GetMeter(METER_DETECTION)->ResetCurrent();
     UniverseObject::GetMeter(METER_SPEED)->ResetCurrent();
+    UniverseObject::GetMeter(METER_BOMBS)->ResetCurrent();
     //UniverseObject::GetMeter(METER_STEALTH)->ResetCurrent(); redundant with base class function
 
     for (auto& entry : m_part_meters) {
@@ -714,6 +720,7 @@ void Ship::ClampMeters() {
 
     UniverseObject::GetMeter(METER_DETECTION)->ClampCurrentToRange();
     UniverseObject::GetMeter(METER_SPEED)->ClampCurrentToRange();
+    UniverseObject::GetMeter(METER_BOMBS)->ClampCurrentToRange();
 
     // clamp most part meters to basic range limits
     for (auto& entry : m_part_meters) {

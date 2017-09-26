@@ -364,6 +364,9 @@ void PartType::Init(std::vector<std::unique_ptr<Effect::EffectsGroup>>&& effects
         case PC_ARMOUR:
             m_effects.push_back(IncreaseMeter(METER_MAX_STRUCTURE,  m_capacity,     "RULE_SHIP_STRUCTURE_FACTOR"));
             break;
+        case PC_BOMBARD:
+            m_effects.push_back(IncreaseMeter(METER_BOMBS,          m_capacity));
+            break;
         case PC_SPEED:
             m_effects.push_back(IncreaseMeter(METER_SPEED,          m_capacity,     "RULE_SHIP_SPEED_FACTOR"));
             break;

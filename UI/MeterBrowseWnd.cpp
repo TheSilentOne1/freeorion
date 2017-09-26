@@ -552,6 +552,7 @@ void ShipDamageBrowseWnd::UpdateEffectLabelsAndValues(GG::Y& top) {
 
 }
 
+
 namespace {
     class ShipFightersBrowseRow : public GG::ListBox::Row {
     public:

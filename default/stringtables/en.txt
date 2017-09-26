@@ -3692,6 +3692,9 @@ Rogue Ship
 SHIP_DAMAGE_STAT_TITLE
 Damage
 
+SHIP_BOMBARD_CAPACITY_STAT_TITLE
+Bombardment Capacity
+
 SHIP_TROOPS_TITLE
 Troops
 
@@ -3724,6 +3727,9 @@ Fleet Fuel - Equal to the minimum fuel of ships in the fleet.
 
 FW_FLEET_SPEED_SUMMARY
 Fleet Speed - Equal to the minimum speed of ships in the fleet.
+
+FW_FLEET_BOMBARDMENT_SUMMARY
+Fleet Bombardment Capacity - Equal to the total bombardment capacity of ships in the fleet.
 
 FW_FLEET_SHIELD_SUMMARY
 Fleet Shields - Equal to the average shields of ships in the fleet.
@@ -5561,6 +5567,12 @@ METER_DETECTION_VALUE_DESC
 Space ships and planets have a Detection Range meter. There is the option to display Detection Range circles (in uu) in the Galaxy Map section of the Options menu. To facilitate predictions of what would be within a Detection Range, there are also options to display a standard 'Map Scale Line' as well as a 'Map Scale Circle' centered on the currently selected system and indicating the same distance as the Map Scale Line. They are both responsive to the the map zoom level and can be toggled via hotkeys.
 
 Some objects or abilities may allow vision of certain areas outside of this range. Some examples are from species abilities of [[species SP_TRITH]] or [[species SP_GEORGE]], or from the effects from a [[buildingtype BLD_SCRYING_SPHERE]].'''
+
+METER_BOMBS_VALUE_LABEL
+Bombardment Capacity
+
+METER_BOMBS_VALUE_LABEL_DESC
+Amount by which population and/or troops are reduced when a planet is bombarded.
 
 METER_SPEED_VALUE_LABEL
 Speed
@@ -8823,6 +8835,10 @@ METER_DETECTION
 Detection Range
 
 # Meter types
+METER_BOMBS
+Bombardment Capacity
+
+# Meter types
 METER_SPEED
 Speed
 
@@ -9396,6 +9412,9 @@ DESC_VAR_STEALTH
 
 DESC_VAR_DETECTION
 [[METER_DETECTION]]
+
+DESC_VAR_BOMBS
+[[METER_BOMBS]]
 
 DESC_VAR_SPEED
 [[METER_SPEED]]

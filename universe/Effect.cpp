@@ -561,6 +561,7 @@ std::string SetMeter::Dump(unsigned short ntabs) const {
     case METER_STEALTH:             retval += "Stealth"; break;
     case METER_DETECTION:           retval += "Detection"; break;
     case METER_SPEED:               retval += "Speed"; break;
+    case METER_BOMBS:               retval += "Bombs"; break;
 
     default:                        retval += "?"; break;
     }

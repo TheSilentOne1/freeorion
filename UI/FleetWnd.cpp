@@ -78,6 +78,9 @@ namespace {
     std::shared_ptr<GG::Texture> ColonyIcon()
     { return ClientUI::GetTexture(ClientUI::ArtDir() / "icons" / "meter" / "colony.png", true); }
 
+    std::shared_ptr<GG::Texture> BombardIcon()
+    { return ClientUI::GetTexture(ClientUI::ArtDir() / "icons" / "meter" / "ammo.png", true); }
+
     std::shared_ptr<GG::Texture> FightersIcon()
     { return ClientUI::GetTexture(ClientUI::ArtDir() / "icons" / "meter" / "fighters.png", true); }
 
@@ -852,6 +855,7 @@ namespace {
                 entry.second->SetBrowseInfoWnd(GG::Wnd::Create<ShipDamageBrowseWnd>(
                                                    m_ship_id, entry.first));
 
+            // add bomb meter
             } else if (entry.first == METER_TROOPS) {
                 entry.second->SetBrowseInfoWnd(GG::Wnd::Create<IconTextBrowseWnd>(
                                                    TroopIcon(), UserString("SHIP_TROOPS_TITLE"),
@@ -962,6 +966,8 @@ namespace {
             meters_icons.push_back({METER_SECONDARY_STAT, FightersIcon()});
         if (ship->HasTroops())
             meters_icons.push_back({METER_TROOPS,         TroopIcon()});
+        if (ship->CanBombard())
+            meters_icons.push_back({METER_BOMBS,          BombardIcon() });
         if (ship->CanColonize())
             meters_icons.push_back({METER_POPULATION,     ColonyIcon()});
         if (ship->InitialMeterValue(METER_INDUSTRY) > 0.0f)
@@ -1561,6 +1567,7 @@ void FleetDataPanel::SetStatIconValues() {
     float min_fuel =        0.0f;
     float min_speed =       0.0f;
     float troops_tally =    0.0f;
+    float bombs_tally =     0.0f;
     float colony_tally =    0.0f;
     std::vector<float> fuels;
     std::vector<float> speeds;
@@ -1583,6 +1590,7 @@ void FleetDataPanel::SetStatIconValues() {
             fighters_tally += ship->FighterCount();
             troops_tally += ship->TroopCapacity();
             colony_tally += ship->ColonyCapacity();
+            bombs_tally += ship->BombardCapacity();
             structure_tally += ship->InitialMeterValue(METER_STRUCTURE);
             shield_tally += ship->InitialMeterValue(METER_SHIELD);
             fuels.push_back(ship->InitialMeterValue(METER_FUEL));
@@ -1655,6 +1663,11 @@ void FleetDataPanel::SetStatIconValues() {
         case METER_FUEL:
             icon->SetValue(min_fuel);
             AttachChild(icon);
+            break;
+        case METER_BOMBS:
+            icon->SetValue(bombs_tally);
+            if (fleet->HasBombers())
+                AttachChild(icon);
             break;
         case METER_SPEED:
             icon->SetValue(min_speed);
@@ -1772,6 +1785,7 @@ void FleetDataPanel::Init() {
         meters_icons_browsetext.emplace_back(METER_CAPACITY, DamageIcon(), "FW_FLEET_DAMAGE_SUMMARY");
         meters_icons_browsetext.emplace_back(METER_SECONDARY_STAT, FightersIcon(), "FW_FLEET_FIGHTER_SUMMARY");
         meters_icons_browsetext.emplace_back(METER_TROOPS, TroopIcon(), "FW_FLEET_TROOP_SUMMARY");
+        meters_icons_browsetext.emplace_back(METER_BOMBS, BombardIcon(), "FW_FLEET_BOMBARDMENT_SUMMARY");
         meters_icons_browsetext.emplace_back(METER_POPULATION, ColonyIcon(), "FW_FLEET_COLONY_SUMMARY");
         meters_icons_browsetext.emplace_back(METER_INDUSTRY, IndustryIcon(), "FW_FLEET_INDUSTRY_SUMMARY");
         meters_icons_browsetext.emplace_back(METER_RESEARCH, ResearchIcon(), "FW_FLEET_RESEARCH_SUMMARY");
@@ -2825,6 +2839,7 @@ void FleetWnd::CompleteConstruction() {
             std::make_tuple(METER_STRUCTURE, ClientUI::MeterIcon(METER_STRUCTURE), UserStringNop("FW_FLEET_STRUCTURE_SUMMARY")),
             std::make_tuple(METER_SHIELD, ClientUI::MeterIcon(METER_SHIELD), UserStringNop("FW_FLEET_SHIELD_SUMMARY")),
             std::make_tuple(METER_TROOPS, TroopIcon(), UserStringNop("FW_FLEET_TROOP_SUMMARY")),
+            std::make_tuple(METER_BOMBS, BombardIcon(), UserStringNop("FW_FLEET_BOMBARDMENT_SUMMARY")),
             std::make_tuple(METER_POPULATION, ColonyIcon(), UserStringNop("FW_FLEET_COLONY_SUMMARY")),
         })
     {
@@ -2914,6 +2929,7 @@ void FleetWnd::SetStatIconValues() {
     float structure_tally = 0.0f;
     float shield_tally =    0.0f;
     float troop_tally =     0.0f;
+    float bombs_tally =     0.0f;
     float colony_tally =    0.0f;
 
     for (auto& fleet : Objects().FindObjects<const Fleet>(m_fleet_ids)) {
@@ -2936,6 +2952,7 @@ void FleetWnd::SetStatIconValues() {
                 structure_tally += ship->InitialMeterValue(METER_STRUCTURE);
                 shield_tally += ship->InitialMeterValue(METER_SHIELD);
                 troop_tally += ship->TroopCapacity();
+                bombs_tally += ship->BombardCapacity();
                 colony_tally += ship->ColonyCapacity();
             }
         }
@@ -2957,6 +2974,8 @@ void FleetWnd::SetStatIconValues() {
             entry.second->SetValue(ship_count);
         else if (stat_name == METER_TROOPS)
             entry.second->SetValue(troop_tally);
+        else if (stat_name == METER_BOMBS)
+            entry.second->SetValue(bombs_tally);
     }
 }
 

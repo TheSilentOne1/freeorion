@@ -34,6 +34,7 @@
     (Blue)                                      \
     (Bombard)                                   \
     (Bomber)                                    \
+    (Bombs)                                     \
     (BuildCost)
 
 #define TOKEN_SEQ_2                             \
@@ -360,6 +361,7 @@
 
 #define TOKEN_SEQ_11                            \
     (SetAggressive)                             \
+    (SetBombs)                                  \
     (SetCapacity)                               \
     (SetConstruction)                           \
     (SetDamage)                                 \

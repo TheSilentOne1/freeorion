@@ -229,6 +229,8 @@ std::shared_ptr<GG::Texture> ClientUI::MeterIcon(MeterType meter_type) {
     case METER_TROOPS:
     case METER_MAX_TROOPS:
         icon_filename = "troops.png";       break;
+    case METER_BOMBS:
+        icon_filename = "ammo.png";         break;
     case METER_REBEL_TROOPS:
         icon_filename = "rebels.png";       break;
     case METER_SPEED:
