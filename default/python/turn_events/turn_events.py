@@ -25,7 +25,7 @@ def execute_turn_events():
         5: "FLD_VOID_RIFT"
     }
 
-        if random() < max(0.00015 * radius, 0.03):
+    if random() < max(0.00015 * radius, 0.03):
         field_type = field_types.get(randint(1, 5), "FLD_ERROR")
         size = 5.0
         x = y = radius
