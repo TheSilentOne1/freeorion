@@ -4,7 +4,7 @@ from common.configure_logging import redirect_logging_to_freeorion_logger
 redirect_logging_to_freeorion_logger()
 
 import sys
-from random import random, uniform, randint, choice
+from random import random, uniform, choice
 from math import sin, cos, pi
 
 import freeorion as fo
@@ -17,16 +17,16 @@ def execute_turn_events():
     # creating fields
     systems = fo.get_systems()
     radius = fo.get_universe_width() / 2.0
-    field_types = {
-        1: "FLD_MOLECULAR_CLOUD",
-        2: "FLD_ION_STORM",
-        3: "FLD_NANITE_SWARM",
-        4: "FLD_METEOR_BLIZZARD",
-        5: "FLD_VOID_RIFT"
-    }
+    field_types = [
+        0: "FLD_MOLECULAR_CLOUD",
+        1: "FLD_ION_STORM",
+        2: "FLD_NANITE_SWARM",
+        3: "FLD_METEOR_BLIZZARD",
+        4: "FLD_VOID_RIFT"
+    ]
 
     if random() < max(0.00015 * radius, 0.03):
-        field_type = field_types.get(randint(1, 5), "FLD_ERROR")
+        field_type = random.choice(field_types)
         size = 5.0
         x = y = radius
         dist_from_center = uniform(0.35, 1.0) * radius
