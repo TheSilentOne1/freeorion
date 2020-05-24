@@ -4,8 +4,8 @@ from common.configure_logging import redirect_logging_to_freeorion_logger
 redirect_logging_to_freeorion_logger()
 
 import sys
-from random import random, uniform, choice
-from math import sin, cos, pi, hypot
+from random import random, uniform, randint, choice
+from math import sin, cos, pi
 
 import freeorion as fo
 from universe_tables import MONSTER_FREQUENCY
@@ -17,21 +17,22 @@ def execute_turn_events():
     # creating fields
     systems = fo.get_systems()
     radius = fo.get_universe_width() / 2.0
-    if random() < max(0.0003 * radius, 0.03):
-        if random() < 0.4:
-            field_type = "FLD_MOLECULAR_CLOUD"
-            size = 5.0
-        else:
-            field_type = "FLD_ION_STORM"
-            size = 5.0
+    field_types = {
+        1: "FLD_MOLECULAR_CLOUD",
+        2: "FLD_ION_STORM",
+        3: "FLD_NANITE_SWARM",
+        4: "FLD_METEOR_BLIZZARD",
+        5: "FLD_VOID_RIFT"
+    }
 
+        if random() < max(0.00015 * radius, 0.03):
+        field_type = field_types.get(randint(1, 5), "FLD_ERROR")
+        size = 5.0
         x = y = radius
-        dist_from_center = 0.0
-        while (dist_from_center < radius) or any(hypot(fo.get_x(s) - x, fo.get_y(s) - y) < 50.0 for s in systems):
-            angle = random() * 2.0 * pi
-            dist_from_center = radius + uniform(min(max(radius * 0.02, 10), 50.0), min(max(radius * 0.05, 20), 100.0))
-            x = radius + (dist_from_center * sin(angle))
-            y = radius + (dist_from_center * cos(angle))
+        dist_from_center = uniform(0.35, 1.0) * radius
+        angle = random() * 2.0 * pi
+        x = radius + (dist_from_center * sin(angle))
+        y = radius + (dist_from_center * cos(angle))
 
         print("...creating new", field_type, "field, at distance", dist_from_center, "from center")
         if fo.create_field(field_type, x, y, size) == fo.invalid_object():
